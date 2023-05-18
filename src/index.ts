@@ -1,31 +1,34 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import express from 'express';
+import 'dotenv/config';
+import db from '../src/config/database/db';
+import helmet from 'helmet';
+import session from 'express-session';
+import passport from 'passport';
+import morgan from 'morgan';
 
-require("dotenv").config();
+db.openConn();
 
-const uri = process.env.MONGODB_URI;
+const app = express();
 
-if (!uri) {
-  throw new Error("A URI de conexão com o MongoDB não foi fornecida.");
-}
+app.use(helmet());
+app.use(
+  session({
+    secret: 'withoutsecret',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.json({ limit: '50mb' }));
+app.use(morgan('tiny'));
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  return console.log(
+    '🚀 \x1b[41m\x1b[37m',
+    `SERVIDOR FUNCIONANDO NA PORTA ${port}`,
+    '\x1b[0m'
+  );
 });
-
-async function run() {
-  try {
-    await client.connect();
-
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } finally {
-    await client.close();
-  }
-}
-run().catch(console.dir);

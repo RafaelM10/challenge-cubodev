@@ -1,4 +1,6 @@
 # dependencies
+.eslintignore
+.prettierignore
 node_modules
 build
 

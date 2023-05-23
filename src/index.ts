@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import session from 'express-session';
 import passport from 'passport';
 import morgan from 'morgan';
+import router from './config/routes/index.routes';
 
 db.openConn();
 
@@ -21,6 +22,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json({ limit: '50mb' }));
+app.use(router);
 app.use(morgan('tiny'));
 
 const port = process.env.PORT || 3000;

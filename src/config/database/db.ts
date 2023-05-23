@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 class DbConfig {
   async openConn() {
     try {
-      await mongoose.connect(process.env.DB_HOST!);
+      await mongoose.connect(process.env.MONGODB_URI!);
 
       console.log(
         '\x1b[41m\x1b[37m',

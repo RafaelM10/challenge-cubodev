@@ -1,10 +1,36 @@
 import { Request, Response } from 'express';
-import User from '../model/user.model';
+import Users from '../model/user.model';
 
-class userController {
+class UserController {
   async register(req: Request, res: Response) {
-    const { name, lastName, participation } = req.body;
+    try {
+      const { name, lastName, participation } = req.body;
+
+      const checkIfUserExist = await Users.findOne({ name, lastName });
+
+      if (checkIfUserExist) {
+        return res.status(400).json({
+          statusCode: 400,
+          message: 'Este usuario já está registrado',
+        });
+      }
+
+      const createUser = await Users.create({
+        name,
+        lastName,
+        participation,
+      });
+
+      return res.status(201).json({
+        statusCode: 201,
+        createUser,
+        message: 'Registrado com sucesso!',
+      });
+    } catch (message) {
+      console.log(message, 'error');
+      return res.status(400).json({ statusCode: 400, message });
+    }
   }
 }
 
-export default new userController();
+export default new UserController();

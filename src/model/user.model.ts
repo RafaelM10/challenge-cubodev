@@ -13,12 +13,12 @@ const UserSchema = new mongoose.Schema(
     lastName: { type: String, required: true },
     participation: { type: Number, required: true },
   },
-  { timestamps: true }
+  { timestamps: true, collection: 'Users' }
 );
 
 UserSchema.plugin(timeZone);
 UserSchema.index({ name: 'text' }, { default_language: 'none' });
 
-const User = mongoose.model<IUser>('User', UserSchema);
+const Users = mongoose.model<IUser>('Users', UserSchema);
 
-export default User;
+export default Users;
